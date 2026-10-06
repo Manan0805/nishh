@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Sparkles, Heart } from 'lucide-react';
+import { PhotoPlaceholder } from './PhotoPlaceholder';
 
 interface BirthdayFinaleProps {
   onOpenSurprise: () => void;
@@ -41,6 +42,24 @@ export const BirthdayFinale: React.FC<BirthdayFinaleProps> = ({
         >
           Happy Birthday, Nishhu. <span className="text-blush-500">❤️</span>
         </motion.h2>
+
+        {/* Photo 03: Birthday Girl Polaroid */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.96 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: true, margin: '-50px' }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+          className="w-full my-4"
+        >
+          <PhotoPlaceholder
+            photoKey="photo3"
+            caption="To the cutest birthday girl"
+            dateStr="7th October 2026"
+            tag="#birthdaygirl"
+            rotation="rotate-[-1deg]"
+            illustrationType="birthday"
+          />
+        </motion.div>
 
         {/* The Heartfelt Letter Card */}
         <motion.div

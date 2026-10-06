@@ -31,8 +31,12 @@ export const MemoryJournal: React.FC = () => {
         transition={{ duration: 0.6 }}
       >
         <PhotoPlaceholder
+          photoKey="photo1"
           caption="That peaceful cab ride"
           dateStr="3rd October 2026"
+          tag="#unforgettable"
+          rotation="rotate-[-1.5deg]"
+          illustrationType="cab"
         />
       </motion.div>
 

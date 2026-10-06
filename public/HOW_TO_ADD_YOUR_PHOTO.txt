@@ -1,0 +1,19 @@
+HOW TO ADD YOUR 3 PERMANENT PHOTOS:
+
+Copy your photos into this "public" folder with these names:
+
+1. photo1.jpg (or photo.jpg)
+   -> Shows in Section 3: "03.10.2026" (That peaceful cab ride)
+   -> Default if missing: Cozy night cab-window bokeh & rain illustration
+
+2. photo2.jpg
+   -> Shows in Section 5: "It's the little things" (Unscripted & candid moments)
+   -> Default if missing: Cozy coffee & polaroid camera illustration
+
+3. photo3.jpg
+   -> Shows in Section 7: "Happy Birthday Finale" (To the cutest birthday girl)
+   -> Default if missing: Birthday candles & blooming floral illustration
+
+Supported formats: .jpg, .jpeg, .png, .webp (just rename the extension to .jpg or keep as .jpg)
+
+NOTE: You can also click the "Add photo" button right on any Polaroid frame in the browser to preview them instantly!

@@ -10,6 +10,7 @@ import {
   Sparkles,
   Check,
 } from 'lucide-react';
+import { PhotoPlaceholder } from './PhotoPlaceholder';
 
 interface LittleMoment {
   id: string;
@@ -87,6 +88,24 @@ export const LittleThings: React.FC = () => {
           It's the little things.
         </h2>
       </div>
+
+      {/* Photo 02: The Little Things Polaroid */}
+      <motion.div
+        initial={{ opacity: 0, scale: 0.96 }}
+        whileInView={{ opacity: 1, scale: 1 }}
+        viewport={{ once: true, margin: '-50px' }}
+        transition={{ duration: 0.6 }}
+        className="mb-8"
+      >
+        <PhotoPlaceholder
+          photoKey="photo2"
+          caption="Unscripted & candid"
+          dateStr="Our favourite little moments"
+          tag="#thelittlethings"
+          rotation="rotate-[1.5deg]"
+          illustrationType="candid"
+        />
+      </motion.div>
 
       {/* Main Narrative Card */}
       <motion.div

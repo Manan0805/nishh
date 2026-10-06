@@ -1,23 +1,48 @@
 import React, { useState, useRef } from 'react';
 import { Camera, RefreshCw } from 'lucide-react';
 
-interface PhotoPlaceholderProps {
+export interface PhotoPlaceholderProps {
+  id?: string;
+  photoKey: 'photo1' | 'photo2' | 'photo3';
   caption: string;
   dateStr: string;
+  tag?: string;
+  rotation?: string;
+  illustrationType?: 'cab' | 'candid' | 'birthday';
 }
 
 export const PhotoPlaceholder: React.FC<PhotoPlaceholderProps> = ({
+  photoKey,
   caption,
   dateStr,
+  tag = '#unforgettable',
+  rotation = 'rotate-[-1deg]',
+  illustrationType = 'cab',
 }) => {
-  const [imageSrc, setImageSrc] = useState<string | null>(null);
+  // Primary file: /photo1.jpg, /photo2.jpg, /photo3.jpg
+  // For photo1, also allow /photo.jpg as fallback
+  const initialSrc = `/${photoKey}.jpg`;
+  const [imageSrc, setImageSrc] = useState<string | null>(initialSrc);
+  const [hasError, setHasError] = useState<boolean>(false);
+  const [triedFallback, setTriedFallback] = useState<boolean>(false);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+
+  const handleImageError = () => {
+    // If photo1 fails on /photo1.jpg, try /photo.jpg before falling back to illustration
+    if (photoKey === 'photo1' && !triedFallback) {
+      setTriedFallback(true);
+      setImageSrc('/photo.jpg');
+    } else {
+      setHasError(true);
+    }
+  };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
       const url = URL.createObjectURL(file);
       setImageSrc(url);
+      setHasError(false);
     }
   };
 
@@ -25,54 +50,102 @@ export const PhotoPlaceholder: React.FC<PhotoPlaceholderProps> = ({
     fileInputRef.current?.click();
   };
 
+  const showCustomPhoto = imageSrc && !hasError;
+
   return (
     <div className="relative mx-auto max-w-sm sm:max-w-md w-full my-6">
       {/* Scrapbook Washi Tape */}
       <div className="washi-tape z-20" />
 
       {/* Polaroid Container */}
-      <div className="relative bg-cream-50 p-4 pb-6 rounded-2xl shadow-polaroid border border-charcoal-200/40 rotate-[-1deg] hover:rotate-0 transition-transform duration-300">
+      <div
+        className={`relative bg-cream-50 p-4 pb-6 rounded-2xl shadow-polaroid border border-charcoal-200/40 ${rotation} hover:rotate-0 transition-transform duration-300`}
+      >
         {/* Photo Box */}
         <div className="relative aspect-[4/3] w-full rounded-xl overflow-hidden bg-gradient-to-b from-[#25222E] via-[#2F293A] to-[#1C1824] shadow-inner flex flex-col items-center justify-center text-cream-100 group">
-          {imageSrc ? (
+          {showCustomPhoto ? (
             <img
               src={imageSrc}
-              alt="Memory on 03.10.2026"
+              alt={caption}
+              onError={handleImageError}
               className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
             />
           ) : (
-            /* Abstract Atmospheric Cab Window Illustration */
+            /* Atmospheric Handcrafted Scrapbook Illustration */
             <div className="relative w-full h-full flex flex-col items-center justify-between p-5 overflow-hidden select-none">
-              {/* Raindrops and Bokeh City Glow in Cab Window */}
-              <div className="absolute inset-0 bg-radial-at-c from-amber-500/10 via-transparent to-black/60 pointer-events-none" />
+              {illustrationType === 'cab' && (
+                <>
+                  <div className="absolute inset-0 bg-radial-at-c from-amber-500/10 via-transparent to-black/60 pointer-events-none" />
+                  <div className="absolute top-1/4 left-1/5 w-16 h-16 rounded-full bg-amber-400/20 blur-xl pointer-events-none animate-pulse" />
+                  <div className="absolute top-1/3 right-1/4 w-20 h-20 rounded-full bg-rose-400/25 blur-xl pointer-events-none" />
+                  <div className="absolute bottom-1/4 left-1/3 w-14 h-14 rounded-full bg-emerald-400/15 blur-lg pointer-events-none" />
+                  <div className="absolute inset-x-0 top-1/2 h-[1px] bg-white/10 pointer-events-none" />
 
-              {/* Bokeh glowing light circles outside cab window */}
-              <div className="absolute top-1/4 left-1/5 w-16 h-16 rounded-full bg-amber-400/20 blur-xl pointer-events-none animate-pulse" />
-              <div className="absolute top-1/3 right-1/4 w-20 h-20 rounded-full bg-rose-400/25 blur-xl pointer-events-none" />
-              <div className="absolute bottom-1/4 left-1/3 w-14 h-14 rounded-full bg-emerald-400/15 blur-lg pointer-events-none" />
+                  <div className="relative z-10 my-auto text-center px-4">
+                    <div className="w-12 h-12 mx-auto rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center border border-white/20 mb-3 shadow-sm">
+                      <span className="text-xl">🚕✨</span>
+                    </div>
+                    <p className="font-serif italic text-lg sm:text-xl text-cream-100/95 font-light tracking-wide">
+                      that cab ride...
+                    </p>
+                    <p className="text-xs text-cream-200/70 font-sans mt-1">
+                      city lights &amp; peaceful silence
+                    </p>
+                  </div>
+                  <div className="relative z-10 w-full flex justify-between items-center text-[10px] text-cream-200/50">
+                    <span>03 · 10 · 2026</span>
+                    <span className="font-sans">photo 01</span>
+                  </div>
+                </>
+              )}
 
-              {/* Subtle Cab Window Glass Frame Lines */}
-              <div className="absolute inset-x-0 top-1/2 h-[1px] bg-white/10 pointer-events-none" />
-              <div className="absolute inset-y-0 right-1/3 w-[1px] bg-white/10 pointer-events-none" />
+              {illustrationType === 'candid' && (
+                <>
+                  <div className="absolute inset-0 bg-radial-at-c from-rose-500/15 via-transparent to-black/60 pointer-events-none" />
+                  <div className="absolute top-1/4 right-1/4 w-18 h-18 rounded-full bg-rose-400/20 blur-xl pointer-events-none" />
+                  <div className="absolute bottom-1/3 left-1/4 w-16 h-16 rounded-full bg-amber-300/15 blur-lg pointer-events-none" />
 
-              {/* Center Silhouette / Night mood icon */}
-              <div className="relative z-10 my-auto text-center px-4">
-                <div className="w-12 h-12 mx-auto rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center border border-white/20 mb-3 shadow-sm">
-                  <span className="text-xl">🚕✨</span>
-                </div>
-                <p className="font-serif italic text-lg sm:text-xl text-cream-100/90 font-light tracking-wide">
-                  that cab ride...
-                </p>
-                <p className="text-xs text-cream-200/60 font-sans mt-1">
-                  city lights &amp; peaceful silence
-                </p>
-              </div>
+                  <div className="relative z-10 my-auto text-center px-4">
+                    <div className="w-12 h-12 mx-auto rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center border border-white/20 mb-3 shadow-sm">
+                      <span className="text-xl">☕📸</span>
+                    </div>
+                    <p className="font-serif italic text-lg sm:text-xl text-cream-100/95 font-light tracking-wide">
+                      unscripted &amp; random...
+                    </p>
+                    <p className="text-xs text-cream-200/70 font-sans mt-1">
+                      stupid jokes &amp; sweet little moments
+                    </p>
+                  </div>
+                  <div className="relative z-10 w-full flex justify-between items-center text-[10px] text-cream-200/50">
+                    <span>our favourites</span>
+                    <span className="font-sans">photo 02</span>
+                  </div>
+                </>
+              )}
 
-              {/* Bottom Subtle Note */}
-              <div className="relative z-10 w-full flex justify-between items-center text-[10px] text-cream-200/50">
-                <span>03 · 10 · 2026</span>
-                <span className="font-sans">our little memory</span>
-              </div>
+              {illustrationType === 'birthday' && (
+                <>
+                  <div className="absolute inset-0 bg-radial-at-c from-amber-400/15 via-rose-500/10 to-black/60 pointer-events-none" />
+                  <div className="absolute top-1/3 left-1/3 w-20 h-20 rounded-full bg-amber-400/25 blur-xl pointer-events-none animate-pulse" />
+                  <div className="absolute bottom-1/4 right-1/3 w-16 h-16 rounded-full bg-pink-400/20 blur-lg pointer-events-none" />
+
+                  <div className="relative z-10 my-auto text-center px-4">
+                    <div className="w-12 h-12 mx-auto rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center border border-white/20 mb-3 shadow-sm">
+                      <span className="text-xl">🎂🌸</span>
+                    </div>
+                    <p className="font-serif italic text-lg sm:text-xl text-cream-100/95 font-light tracking-wide">
+                      the birthday girl...
+                    </p>
+                    <p className="text-xs text-cream-200/70 font-sans mt-1">
+                      hoping you smile today
+                    </p>
+                  </div>
+                  <div className="relative z-10 w-full flex justify-between items-center text-[10px] text-cream-200/50">
+                    <span>07 · 10 · 2026</span>
+                    <span className="font-sans">photo 03</span>
+                  </div>
+                </>
+              )}
             </div>
           )}
 
@@ -80,19 +153,19 @@ export const PhotoPlaceholder: React.FC<PhotoPlaceholderProps> = ({
           <div className="absolute bottom-3 right-3 z-30">
             <button
               onClick={handleTriggerUpload}
-              title={imageSrc ? 'Change photo' : 'Add your photo here'}
+              title={showCustomPhoto ? 'Change photo' : 'Add photo here'}
               className="px-2.5 py-1.5 rounded-full bg-black/60 hover:bg-black/80 backdrop-blur-md text-white text-[11px] font-sans flex items-center gap-1.5 transition-all shadow-md active:scale-95 border border-white/20"
               aria-label="Upload photo"
             >
-              {imageSrc ? (
+              {showCustomPhoto ? (
                 <>
                   <RefreshCw className="w-3 h-3 text-blush-300" />
-                  <span>Change</span>
+                  <span>Change photo</span>
                 </>
               ) : (
                 <>
                   <Camera className="w-3 h-3 text-blush-300" />
-                  <span>Mann's photo slot</span>
+                  <span>Add photo</span>
                 </>
               )}
             </button>
@@ -117,7 +190,7 @@ export const PhotoPlaceholder: React.FC<PhotoPlaceholderProps> = ({
             </p>
           </div>
           <span className="text-xs text-blush-400 font-serif italic">
-            #unforgettable
+            {tag}
           </span>
         </div>
       </div>
