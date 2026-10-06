@@ -104,6 +104,8 @@ export const LittleThings: React.FC = () => {
           tag="#thelittlethings"
           rotation="rotate-[1.5deg]"
           illustrationType="candid"
+          aspectRatio="3/4"
+          objectPosition="object-center"
         />
       </motion.div>
 

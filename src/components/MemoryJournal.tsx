@@ -37,6 +37,8 @@ export const MemoryJournal: React.FC = () => {
           tag="#unforgettable"
           rotation="rotate-[-1.5deg]"
           illustrationType="cab"
+          aspectRatio="4/3"
+          objectPosition="object-center"
         />
       </motion.div>
 

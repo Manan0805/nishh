@@ -9,6 +9,9 @@ export interface PhotoPlaceholderProps {
   tag?: string;
   rotation?: string;
   illustrationType?: 'cab' | 'candid' | 'birthday';
+  aspectRatio?: '4/3' | '3/4' | '4/5' | '1/1';
+  objectPosition?: string;
+  maxContainerWidth?: string;
 }
 
 export const PhotoPlaceholder: React.FC<PhotoPlaceholderProps> = ({
@@ -18,6 +21,9 @@ export const PhotoPlaceholder: React.FC<PhotoPlaceholderProps> = ({
   tag = '#unforgettable',
   rotation = 'rotate-[-1deg]',
   illustrationType = 'cab',
+  aspectRatio = '4/3',
+  objectPosition = 'object-center',
+  maxContainerWidth = 'max-w-sm sm:max-w-md',
 }) => {
   // Primary file: /photo1.jpg, /photo2.jpg, /photo3.jpg
   // For photo1, also allow /photo.jpg as fallback
@@ -52,23 +58,32 @@ export const PhotoPlaceholder: React.FC<PhotoPlaceholderProps> = ({
 
   const showCustomPhoto = imageSrc && !hasError;
 
+  const aspectClass =
+    aspectRatio === '3/4'
+      ? 'aspect-[3/4]'
+      : aspectRatio === '4/5'
+      ? 'aspect-[4/5]'
+      : aspectRatio === '1/1'
+      ? 'aspect-square'
+      : 'aspect-[4/3]';
+
   return (
-    <div className="relative mx-auto max-w-sm sm:max-w-md w-full my-6">
+    <div className={`relative mx-auto ${maxContainerWidth} w-full my-4`}>
       {/* Scrapbook Washi Tape */}
       <div className="washi-tape z-20" />
 
       {/* Polaroid Container */}
       <div
-        className={`relative bg-cream-50 p-4 pb-6 rounded-2xl shadow-polaroid border border-charcoal-200/40 ${rotation} hover:rotate-0 transition-transform duration-300`}
+        className={`relative bg-cream-50 p-3.5 sm:p-4 pb-5 sm:pb-6 rounded-2xl shadow-polaroid border border-charcoal-200/40 ${rotation} hover:rotate-0 transition-transform duration-300`}
       >
         {/* Photo Box */}
-        <div className="relative aspect-[4/3] w-full rounded-xl overflow-hidden bg-gradient-to-b from-[#25222E] via-[#2F293A] to-[#1C1824] shadow-inner flex flex-col items-center justify-center text-cream-100 group">
+        <div className={`relative ${aspectClass} w-full rounded-xl overflow-hidden bg-gradient-to-b from-[#25222E] via-[#2F293A] to-[#1C1824] shadow-inner flex flex-col items-center justify-center text-cream-100 group`}>
           {showCustomPhoto ? (
             <img
               src={imageSrc}
               alt={caption}
               onError={handleImageError}
-              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+              className={`w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 ${objectPosition}`}
             />
           ) : (
             /* Atmospheric Handcrafted Scrapbook Illustration */
